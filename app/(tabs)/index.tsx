@@ -85,28 +85,32 @@ export default function Home() {
           )}
         />
       </View>
-      <View className="mt-6">
-        <View className="h-[200] w-full overflow-hidden rounded-3xl">
-          <Image
-            source={{
-              uri: "https://images.pexels.com/photos/1488267/pexels-photo-1488267.png",
-            }}
-            style={{ width: "100%", height: 200 }}
-          />
-          <LinearGradient
-            colors={["transparent", "rgba(0,0,0,0.8)"]}
-            className="absolute bottom-0 left-0 right-0 h-32"
-          />
+      {[1, 2, 3, 4, 5, 6, 7].map((item) => {
+        return (
+          <View className="mt-6" key={item}>
+            <View className="h-[200] w-full overflow-hidden rounded-3xl">
+              <Image
+                source={{
+                  uri: "https://images.pexels.com/photos/1488267/pexels-photo-1488267.png",
+                }}
+                style={{ width: "100%", height: 200 }}
+              />
+              <LinearGradient
+                colors={["transparent", "rgba(0,0,0,0.8)"]}
+                className="absolute bottom-0 left-0 right-0 h-32"
+              />
 
-          <View className="absolute bottom-5 left-5 right-5">
-            <Text className="text-2xl font-sans-bold text-white">
-              Modern Apartment
-            </Text>
+              <View className="absolute bottom-5 left-5 right-5">
+                <Text className="text-2xl font-sans-bold text-white">
+                  Modern Apartment
+                </Text>
 
-            <Text className="mt-1 text-white/80">Pune, Maharashtra</Text>
+                <Text className="mt-1 text-white/80">Pune, Maharashtra</Text>
+              </View>
+            </View>
           </View>
-        </View>
-      </View>
+        );
+      })}
     </SafeAreaView>
   );
 }
