@@ -1,8 +1,7 @@
 import { Tabs } from "expo-router";
-import { colors, components } from "@/constants/theme";
+import { colors } from "@/constants/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Octicons from "@expo/vector-icons/Octicons";
-const tabBar = components.tabBar;
 
 export const tabs: AppTab[] = [
   { name: "index", title: "Home" },
@@ -26,7 +25,7 @@ export default function TabsLayout() {
           height: 72,
           marginHorizontal: 20,
           borderRadius: 32,
-          backgroundColor: "#f7f7f7",
+          backgroundColor: "#ffffff",
           borderTopWidth: 0,
           elevation: 0,
         },

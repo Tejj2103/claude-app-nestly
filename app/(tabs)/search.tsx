@@ -1,16 +1,20 @@
-import { icons } from "@/constants/icons";
-import { Image, Text, View } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import { Text, View } from "react-native";
+import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
+import { styled } from "nativewind";
+
+const SafeAreaView = styled(RNSafeAreaView);
 
 export default function Search() {
+  const { category } = useLocalSearchParams();
   return (
-    <View className="flex-1 items-center justify-center gap-3 bg-background pt-safe">
-      <Image
-        source={icons.search}
-        className="tabs-glyph"
-        resizeMode="contain"
-        style={{ width: 48, height: 48 }}
-      />
-      <Text className="text-lg font-semibold text-foreground">Search</Text>
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ padding: 20 }}>
+        <Text style={{ fontSize: 24, fontWeight: "600" }}>Search Results</Text>
+        {category && (
+          <Text style={{ marginTop: 12 }}>Category: {category}</Text>
+        )}
+      </View>
+    </SafeAreaView>
   );
-};
+}
