@@ -1,32 +1,37 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { useNativeCssStyle, useNativeVariable } from "react-native-css";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export default function TabsLayout() {
-  const insets = useSafeAreaInsets();
-  const activeColor = useNativeVariable("--color-primary");
-  const inactiveColor = useNativeVariable("--color-muted-foreground");
-  const tabBarBaseStyle = useNativeCssStyle("bg-tab-bar rounded-tab-bar h-tab-bar mx-tab-bar-offset");
-  const tabBarItemStyle = useNativeCssStyle("py-tab-item-y");
-  const tabBarIconStyle = useNativeCssStyle("h-tab-icon w-tab-icon items-center");
+const ACTIVE_COLOR = "#131313";
+const INACTIVE_COLOR = "#8a8a85";
 
+export default function TabsLayout() {
+   const insets = useSafeAreaInsets();
   return (
     <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: activeColor,
-        tabBarInactiveTintColor: inactiveColor,
+       screenOptions={{
+        tabBarActiveTintColor: ACTIVE_COLOR,
+        tabBarInactiveTintColor: INACTIVE_COLOR,
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          ...tabBarBaseStyle,
           position: "absolute",
           bottom: Math.max(insets.bottom, 20),
+          height: 72,
+          marginHorizontal: 20,
+          borderRadius: 32,
+          backgroundColor: '#f7f7f7',
           borderTopWidth: 0,
           elevation: 0,
         },
-        tabBarItemStyle,
-        tabBarIconStyle,
+        tabBarItemStyle: {
+          paddingVertical: 72 / 2 - 48 / 1.6,
+        },
+        tabBarIconStyle: {
+          width: 48,
+          height: 48,
+          alignItems: "center",
+        },
       }}
     >
       <Tabs.Screen
