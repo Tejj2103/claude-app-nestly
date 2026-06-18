@@ -1,17 +1,36 @@
-import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import clsx from "clsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { icons } from "@/constants/icons";
+import { Image, View } from "react-native";
 
-const ACTIVE_COLOR = "#131313";
-const INACTIVE_COLOR = "#8a8a85";
+export const tabs: AppTab[] = [
+  { name: "index", title: "Home", icon: icons.home },
+  { name: "search", title: "Search", icon: icons.search },
+  { name: "favorites", title: "Favorites", icon: icons.heart },
+  { name: "profile", title: "Profile", icon: icons.user },
+];
 
 export default function TabsLayout() {
-   const insets = useSafeAreaInsets();
+  const insets = useSafeAreaInsets();
+
+  const TabIcon = ({ focused, icon }: TabIconProps) => {
+    return (
+      <View className="tabs-icon">
+        <View className={clsx("tabs-pill", focused && "tabs-active")}>
+          <Image
+            source={icon}
+            className="tabs-glyph"
+            resizeMode="contain"
+            style={{ width: 24, height: 24 }}
+          />
+        </View>
+      </View>
+    );
+  };
   return (
     <Tabs
-       screenOptions={{
-        tabBarActiveTintColor: ACTIVE_COLOR,
-        tabBarInactiveTintColor: INACTIVE_COLOR,
+      screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
@@ -20,7 +39,7 @@ export default function TabsLayout() {
           height: 72,
           marginHorizontal: 20,
           borderRadius: 32,
-          backgroundColor: '#f7f7f7',
+          backgroundColor: "#f7f7f7",
           borderTopWidth: 0,
           elevation: 0,
         },
@@ -34,42 +53,18 @@ export default function TabsLayout() {
         },
       }}
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? "home" : "home-outline"} size={24} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="search"
-        options={{
-          title: "Search",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? "search" : "search-outline"} size={24} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="favorites"
-        options={{
-          title: "Favorites",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? "heart" : "heart-outline"} size={24} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? "person" : "person-outline"} size={24} color={color} />
-          ),
-        }}
-      />
+      {tabs.map((tab) => (
+        <Tabs.Screen
+          key={tab.name}
+          name={tab.name}
+          options={{
+            title: tab.title,
+            tabBarIcon: ({ focused }) => (
+              <TabIcon focused={focused} icon={tab.icon} />
+            ),
+          }}
+        />
+      ))}
     </Tabs>
   );
 }
