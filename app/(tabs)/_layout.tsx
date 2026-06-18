@@ -1,38 +1,25 @@
 import { Tabs } from "expo-router";
-import clsx from "clsx";
+import { colors, components } from "@/constants/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { icons } from "@/constants/icons";
-import { Image, View } from "react-native";
+import Octicons from "@expo/vector-icons/Octicons";
+const tabBar = components.tabBar;
 
 export const tabs: AppTab[] = [
-  { name: "index", title: "Home", icon: icons.home },
-  { name: "search", title: "Search", icon: icons.search },
-  { name: "favorites", title: "Favorites", icon: icons.heart },
-  { name: "profile", title: "Profile", icon: icons.user },
+  { name: "index", title: "Home" },
+  { name: "search", title: "Search" },
+  { name: "favorites", title: "Favorites" },
+  { name: "profile", title: "Profile" },
 ];
 
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
 
-  const TabIcon = ({ focused, icon }: TabIconProps) => {
-    return (
-      <View className="tabs-icon">
-        <View className={clsx("tabs-pill", focused && "tabs-active")}>
-          <Image
-            source={icon}
-            className="tabs-glyph"
-            resizeMode="contain"
-            style={{ width: 24, height: 24 }}
-          />
-        </View>
-      </View>
-    );
-  };
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
+        tabBarActiveTintColor: colors.accent,
         tabBarStyle: {
           position: "absolute",
           bottom: Math.max(insets.bottom, 20),
@@ -59,8 +46,26 @@ export default function TabsLayout() {
           name={tab.name}
           options={{
             title: tab.title,
-            tabBarIcon: ({ focused }) => (
-              <TabIcon focused={focused} icon={tab.icon} />
+            tabBarIcon: ({ focused, color }) => (
+              <Octicons
+                name={
+                  tab.name === "index"
+                    ? focused
+                      ? "home-fill"
+                      : "home"
+                    : tab.name === "search"
+                      ? "search"
+                      : tab.name === "favorites"
+                        ? focused
+                          ? "heart-fill"
+                          : "heart"
+                        : focused
+                          ? "person-fill"
+                          : "person"
+                }
+                size={28}
+                color={color}
+              />
             ),
           }}
         />

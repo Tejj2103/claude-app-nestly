@@ -5,6 +5,12 @@
 @import "nativewind/theme";
 
 @theme {
+  --color-background: #FFFFFF;
+  --color-foreground: #081126;
+  --color-primary: #0b1220;
+  --color-accent: #723bff;
+  --color-secondary: #cab5ff;
+
   /* Typography */
   --font-sans: sans-regular;
   --font-sans-light: sans-light;
@@ -12,4 +18,22 @@
   --font-sans-semibold: sans-semibold;
   --font-sans-bold: sans-bold;
   --font-sans-extrabold: sans-extrabold;
+}
+
+@layer components {
+  .tabs-icon {
+    @apply size-12 items-center justify-center;
+  }
+
+  .tabs-pill {
+    @apply size-12 items-center justify-center rounded-full bg-transparent;
+  }
+
+  .tabs-active {
+    @apply bg-secondary;
+  }
+
+  .tabs-glyph {
+    @apply size-6;
+  }
 }
