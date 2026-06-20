@@ -20,7 +20,6 @@ export default function PropertyDetail() {
   const { data: home, isLoading, error } = useHome(id);
   const isFavorite = useFavoritesStore((state) => (id ? state.isFavorite(id) : false));
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
-  console.log('data', home);
   if (isLoading) {
     return (
       <SafeAreaView className="flex-1 items-center justify-center bg-background">
