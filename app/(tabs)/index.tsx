@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { FlatList, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 import { styled } from "nativewind";
 import Octicons from "@expo/vector-icons/Octicons";
@@ -29,15 +38,28 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [extraFilters, setExtraFilters] = useState(DEFAULT_HOME_FILTERS);
-  const homes = useHomes({ category: active, query, ...extraFilters });
+  const {
+    data: homes,
+    isLoading,
+    isRefreshing,
+    error,
+    refetch,
+  } = useHomes({ category: active, query, ...extraFilters });
   const hasActiveFilters = !isDefaultFilters(extraFilters);
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F2F2F2]">
+    <SafeAreaView className="flex-1 bg-transparent">
       <ScrollView
         stickyHeaderIndices={[1]}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 32 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={refetch}
+            tintColor={colors.accent}
+          />
+        }
       >
         <View className="px-5 pt-5">
           <View className="flex-row items-center justify-between">
@@ -113,7 +135,13 @@ export default function Home() {
             )}
           />
 
-          {homes.length === 0 ? (
+          {isLoading ? (
+            <ActivityIndicator className="mt-10" color={colors.accent} />
+          ) : error ? (
+            <Text className="mt-10 text-center text-primary/60">
+              Couldn&apos;t load properties: {error}
+            </Text>
+          ) : homes.length === 0 ? (
             <Text className="mt-10 text-center text-primary/60">
               {query.trim()
                 ? "No properties match your search."

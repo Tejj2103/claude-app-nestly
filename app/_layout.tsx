@@ -4,6 +4,10 @@ import { useFonts } from "expo-font";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useEffect } from "react";
 
+import { getDeviceId } from "@/lib/device-id";
+import { useFavoritesStore } from "@/lib/store/favorites-store";
+import { useProfileStore } from "@/lib/store/profile-store";
+
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     "sans-light": require("../assets/fonts/PlusJakartaSans-Light.ttf"),
@@ -20,13 +24,25 @@ export default function RootLayout() {
     }
   }, [fontsLoaded]);
 
+  useEffect(() => {
+    getDeviceId().then((deviceId) => {
+      useFavoritesStore.getState().init(deviceId);
+      useProfileStore.getState().init(deviceId);
+    });
+  }, []);
+
   if (!fontsLoaded) {
     return null;
   }
 
   return (
     <SafeAreaProvider>
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: "transparent" },
+        }}
+      />
     </SafeAreaProvider>
   );
 }

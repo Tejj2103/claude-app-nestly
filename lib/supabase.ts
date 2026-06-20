@@ -1,17 +1,13 @@
-/**
- * Placeholder for the future Supabase connection — not wired up yet.
- *
- * Once a Supabase project exists, install `@supabase/supabase-js`, set
- * EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY in .env, and
- * uncomment below. lib/data/properties.ts is where the dummy reads get
- * replaced with real `supabase.from('properties').select(...)` calls.
- */
+import { createClient } from "@supabase/supabase-js";
 
-// import { createClient } from "@supabase/supabase-js";
-//
-// const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
-// const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
-//
-// export const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
-export {};
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    "Missing EXPO_PUBLIC_SUPABASE_URL or EXPO_PUBLIC_SUPABASE_ANON_KEY. Set them in nestly/.env."
+  );
+}
+
+// No Supabase Auth in use (no login flow yet) — just a plain database client.
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);

@@ -1,6 +1,6 @@
 import Octicons from "@expo/vector-icons/Octicons";
 import { router, useLocalSearchParams } from "expo-router";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 import { styled } from "nativewind";
 
@@ -17,15 +17,23 @@ function formatPrice(price: number, isLease: boolean) {
 
 export default function PropertyDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const home = useHome(id);
+  const { data: home, isLoading, error } = useHome(id);
   const isFavorite = useFavoritesStore((state) => (id ? state.isFavorite(id) : false));
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
+  console.log('data', home);
+  if (isLoading) {
+    return (
+      <SafeAreaView className="flex-1 items-center justify-center bg-background">
+        <ActivityIndicator color={colors.accent} />
+      </SafeAreaView>
+    );
+  }
 
-  if (!home) {
+  if (error || !home) {
     return (
       <SafeAreaView className="flex-1 items-center justify-center gap-4 bg-background px-5">
         <Text className="text-lg font-sans-semibold text-primary">
-          We couldn&apos;t find that property.
+          {error ? `Couldn't load that property: ${error}` : "We couldn't find that property."}
         </Text>
         <Pressable
           className="rounded-full bg-accent px-6 py-3"
