@@ -5,29 +5,29 @@ import type { Property } from "@/lib/data/types";
 import { supabase } from "@/lib/supabase";
 
 interface FavoritesState {
-  deviceId: string | null;
+  userId: string | null;
   favoriteIds: string[];
   favoriteProperties: Property[];
   isLoading: boolean;
   isFavorite: (id: string) => boolean;
-  init: (deviceId: string) => Promise<void>;
+  init: (userId: string) => Promise<void>;
   toggleFavorite: (propertyId: string) => Promise<void>;
 }
 
 export const useFavoritesStore = create<FavoritesState>()((set, get) => ({
-  deviceId: null,
+  userId: null,
   favoriteIds: [],
   favoriteProperties: [],
   isLoading: false,
   isFavorite: (id) => get().favoriteIds.includes(id),
 
-  init: async (deviceId) => {
-    set({ deviceId, isLoading: true });
+  init: async (userId) => {
+    set({ userId, isLoading: true });
 
     const { data, error } = await supabase
       .from("favorites")
       .select("property_id, properties(*)")
-      .eq("device_id", deviceId);
+      .eq("clerk_user_id", userId);
 
     if (error) {
       console.warn("Failed to load favorites:", error.message);
@@ -46,8 +46,8 @@ export const useFavoritesStore = create<FavoritesState>()((set, get) => ({
   },
 
   toggleFavorite: async (propertyId) => {
-    const { deviceId, favoriteIds } = get();
-    if (!deviceId) return;
+    const { userId, favoriteIds } = get();
+    if (!userId) return;
 
     const wasFavorite = favoriteIds.includes(propertyId);
 
@@ -61,7 +61,7 @@ export const useFavoritesStore = create<FavoritesState>()((set, get) => ({
       const { error } = await supabase
         .from("favorites")
         .delete()
-        .eq("device_id", deviceId)
+        .eq("clerk_user_id", userId)
         .eq("property_id", propertyId);
       if (!error) {
         set((state) => ({
@@ -73,7 +73,7 @@ export const useFavoritesStore = create<FavoritesState>()((set, get) => ({
 
     const { error } = await supabase
       .from("favorites")
-      .insert({ device_id: deviceId, property_id: propertyId });
+      .insert({ clerk_user_id: userId, property_id: propertyId });
     if (error) return;
 
     const { data: row } = await supabase
