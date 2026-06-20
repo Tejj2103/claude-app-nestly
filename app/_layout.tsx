@@ -7,12 +7,19 @@ import { useEffect } from "react";
 
 import { tokenCache } from "@/lib/auth/token-cache";
 import { useFavoritesStore } from "@/lib/store/favorites-store";
+import { useOnboardingStore } from "@/lib/store/onboarding-store";
 import { useProfileStore } from "@/lib/store/profile-store";
 import { supabase } from "@/lib/supabase";
 
 function RootNavigator() {
   const { isSignedIn } = useAuth();
   const { user } = useUser();
+  const hasOnboarded = useOnboardingStore((state) => state.hasOnboarded);
+  const initOnboarding = useOnboardingStore((state) => state.init);
+
+  useEffect(() => {
+    initOnboarding();
+  }, [initOnboarding]);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -37,6 +44,10 @@ function RootNavigator() {
       });
   }, [user?.id]);
 
+  if (hasOnboarded === null) {
+    return null;
+  }
+
   return (
     <Stack
       screenOptions={{
@@ -44,11 +55,14 @@ function RootNavigator() {
         contentStyle: { backgroundColor: "transparent" },
       }}
     >
+      <Stack.Protected guard={!hasOnboarded && !isSignedIn}>
+        <Stack.Screen name="onboarding" />
+      </Stack.Protected>
       <Stack.Protected guard={!!isSignedIn}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="property/[id]" />
       </Stack.Protected>
-      <Stack.Protected guard={!isSignedIn}>
+      <Stack.Protected guard={!isSignedIn && !!hasOnboarded}>
         <Stack.Screen name="(auth)" />
       </Stack.Protected>
     </Stack>

@@ -1,7 +1,16 @@
 import { useClerk } from "@clerk/expo";
 import Octicons from "@expo/vector-icons/Octicons";
+import { Image as ExpoImage } from "expo-image";
 import { useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 import { styled } from "nativewind";
 
@@ -86,8 +95,18 @@ export default function Profile() {
       <ScrollView className="px-5" showsVerticalScrollIndicator={false}>
         <View className="flex-row items-center justify-between pt-5">
           <Text className="text-3xl font-sans-bold text-primary">Profile</Text>
-          <View className="h-14 w-14 items-center justify-center rounded-full bg-secondary">
-            <Octicons name="person" size={24} color={colors.primary} />
+          <View className="h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-secondary">
+            {profile.avatarUrl ? (
+              <Image
+                source={{ uri: profile.avatarUrl }}
+                style={{ width: "100%", height: "100%" }}
+              />
+            ) : (
+              <ExpoImage
+                source={require("@/assets/images/user-profile.svg")}
+                style={{ width: "100%", height: "100%" }}
+              />
+            )}
           </View>
         </View>
 
