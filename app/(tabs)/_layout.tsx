@@ -23,6 +23,7 @@ export default function TabsLayout() {
           position: "absolute",
           bottom: Math.max(insets.bottom, 20),
           height: 72,
+          paddingBottom: 0,
           marginHorizontal: 20,
           borderRadius: 32,
           backgroundColor: "#ffffff",
