@@ -2,6 +2,7 @@ import { RangeSlider } from "@react-native-assets/slider";
 import { Modal, Pressable, Text, View } from "react-native";
 
 import { colors } from "@/constants/theme";
+import { useCities } from "@/lib/data/properties";
 import type { BathroomsFilter, BhkFilter, HomeFilters, SortBy } from "@/lib/data/properties";
 import type { FurnishedStatus } from "@/lib/data/types";
 
@@ -24,7 +25,7 @@ const MAX_PRICE = 40000000; // ₹4,00,00,000 (4 Cr)
 const PRICE_STEP = 50000;
 
 export const DEFAULT_HOME_FILTERS: Required<
-  Pick<HomeFilters, "bhk" | "furnished" | "bathrooms" | "minPrice" | "maxPrice" | "sortBy">
+  Pick<HomeFilters, "bhk" | "furnished" | "bathrooms" | "minPrice" | "maxPrice" | "sortBy" | "city">
 > = {
   bhk: "Any",
   furnished: "Any",
@@ -32,6 +33,7 @@ export const DEFAULT_HOME_FILTERS: Required<
   minPrice: MIN_PRICE,
   maxPrice: MAX_PRICE,
   sortBy: "none",
+  city: "Any",
 };
 
 type ExtraFilters = typeof DEFAULT_HOME_FILTERS;
@@ -79,6 +81,7 @@ interface FilterModalProps {
 
 export function FilterModal({ visible, onClose, filters, onApply }: FilterModalProps) {
   const update = (partial: Partial<ExtraFilters>) => onApply({ ...filters, ...partial });
+  const cities = useCities();
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
@@ -100,6 +103,24 @@ export function FilterModal({ visible, onClose, filters, onApply }: FilterModalP
                 label={option === "Any" ? "Any" : option === "Studio" ? "Studio" : `${option} BHK`}
                 selected={filters.bhk === option}
                 onPress={() => update({ bhk: option })}
+              />
+            ))}
+          </View>
+        </Section>
+
+        <Section title="Area">
+          <View className="flex-row flex-wrap gap-2">
+            <Chip
+              label="Any"
+              selected={filters.city === "Any"}
+              onPress={() => update({ city: "Any" })}
+            />
+            {cities.map((city) => (
+              <Chip
+                key={city}
+                label={city}
+                selected={filters.city === city}
+                onPress={() => update({ city })}
               />
             ))}
           </View>

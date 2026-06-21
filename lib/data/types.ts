@@ -18,6 +18,7 @@ export interface Property {
   status: PropertyStatus;
   availableFrom?: string;
   description?: string;
+  city?: string;
 }
 
 export interface PropertyImage {

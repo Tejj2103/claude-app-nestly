@@ -16,6 +16,7 @@ export interface HomeFilters {
   minPrice?: number;
   maxPrice?: number;
   sortBy?: SortBy;
+  city?: string;
 }
 
 const BHK_BEDROOMS: Record<Exclude<BhkFilter, "Any">, number> = {
@@ -41,6 +42,7 @@ interface PropertyRow {
   status: PropertyStatus;
   available_from: string | null;
   description: string | null;
+  city: string | null;
 }
 
 export function mapPropertyRow(row: PropertyRow): Property {
@@ -60,6 +62,7 @@ export function mapPropertyRow(row: PropertyRow): Property {
     status: row.status,
     availableFrom: row.available_from ?? undefined,
     description: row.description ?? undefined,
+    city: row.city ?? undefined,
   };
 }
 
@@ -76,7 +79,7 @@ interface UseHomesResult {
  * practical (category/query/bhk/furnished/bathrooms/price/sort).
  */
 export function useHomes(filters: HomeFilters = {}): UseHomesResult {
-  const { category, query, bhk, furnished, bathrooms, minPrice, maxPrice, sortBy } = filters;
+  const { category, query, bhk, furnished, bathrooms, minPrice, maxPrice, sortBy, city } = filters;
 
   const [data, setData] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -113,6 +116,9 @@ export function useHomes(filters: HomeFilters = {}): UseHomesResult {
       if (maxPrice != null) {
         q = q.lte("price", maxPrice);
       }
+      if (city && city !== "Any") {
+        q = q.eq("city", city);
+      }
       q =
         sortBy === "price-asc"
           ? q.order("price", { ascending: true })
@@ -132,7 +138,7 @@ export function useHomes(filters: HomeFilters = {}): UseHomesResult {
       if (mode === "initial") setIsLoading(false);
       else setIsRefreshing(false);
     },
-    [category, query, bhk, furnished, bathrooms, minPrice, maxPrice, sortBy]
+    [category, query, bhk, furnished, bathrooms, minPrice, maxPrice, sortBy, city]
   );
 
   useEffect(() => {
@@ -231,4 +237,23 @@ export function usePropertyImages(propertyId: string | undefined): PropertyImage
   }, [propertyId]);
 
   return images;
+}
+
+export function useCities(): string[] {
+  const [cities, setCities] = useState<string[]>([]);
+
+  useEffect(() => {
+    supabase
+      .from("properties")
+      .select("city")
+      .not("city", "is", null)
+      .then(({ data: rows }) => {
+        const unique = Array.from(
+          new Set(((rows ?? []) as { city: string | null }[]).map((row) => row.city).filter(Boolean))
+        ) as string[];
+        setCities(unique.sort());
+      });
+  }, []);
+
+  return cities;
 }

@@ -29,7 +29,8 @@ function isDefaultFilters(filters: typeof DEFAULT_HOME_FILTERS) {
     filters.bathrooms === DEFAULT_HOME_FILTERS.bathrooms &&
     filters.minPrice === DEFAULT_HOME_FILTERS.minPrice &&
     filters.maxPrice === DEFAULT_HOME_FILTERS.maxPrice &&
-    filters.sortBy === DEFAULT_HOME_FILTERS.sortBy
+    filters.sortBy === DEFAULT_HOME_FILTERS.sortBy &&
+    filters.city === DEFAULT_HOME_FILTERS.city
   );
 }
 
