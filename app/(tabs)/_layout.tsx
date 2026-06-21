@@ -5,7 +5,6 @@ import Octicons from "@expo/vector-icons/Octicons";
 
 export const tabs: AppTab[] = [
   { name: "index", title: "Home" },
-  { name: "search", title: "Search" },
   { name: "favorites", title: "Favorites" },
   { name: "profile", title: "Profile" },
 ];
@@ -53,15 +52,13 @@ export default function TabsLayout() {
                     ? focused
                       ? "home-fill"
                       : "home"
-                    : tab.name === "search"
-                      ? "search"
-                      : tab.name === "favorites"
-                        ? focused
-                          ? "heart-fill"
-                          : "heart"
-                        : focused
-                          ? "person-fill"
-                          : "person"
+                    : tab.name === "favorites"
+                      ? focused
+                        ? "heart-fill"
+                        : "heart"
+                      : focused
+                        ? "person-fill"
+                        : "person"
                 }
                 size={28}
                 color={color}

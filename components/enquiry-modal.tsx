@@ -1,5 +1,16 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Modal, Pressable, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 interface EnquiryModalProps {
   visible: boolean;
@@ -35,62 +46,73 @@ export function EnquiryModal({
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <Pressable className="flex-1 bg-black/40" onPress={onClose} />
 
-      <View className="gap-5 rounded-t-3xl bg-white px-5 pb-8 pt-6">
-        <View className="flex-row items-center justify-between">
-          <Text className="text-xl font-sans-bold text-primary">Request Enquiry</Text>
-          <Pressable onPress={onClose}>
-            <Text className="font-sans-medium text-primary/60">Close</Text>
-          </Pressable>
-        </View>
-
-        <View className="gap-2">
-          <Text className="font-sans-medium text-primary/70">Name</Text>
-          <TextInput
-            className="rounded-2xl bg-[#F2F2F2] px-4 py-4 font-sans-regular text-primary"
-            value={fullName}
-            onChangeText={setFullName}
-            placeholder="Your name"
-            placeholderTextColor="#b7b7b8"
-          />
-        </View>
-
-        <View className="gap-2">
-          <Text className="font-sans-medium text-primary/70">Phone</Text>
-          <TextInput
-            className="rounded-2xl bg-[#F2F2F2] px-4 py-4 font-sans-regular text-primary"
-            value={phone}
-            onChangeText={setPhone}
-            placeholder="+91 98765 43210"
-            placeholderTextColor="#b7b7b8"
-            keyboardType="phone-pad"
-          />
-        </View>
-
-        <View className="gap-2">
-          <Text className="font-sans-medium text-primary/70">Message (optional)</Text>
-          <TextInput
-            className="min-h-24 rounded-2xl bg-[#F2F2F2] px-4 py-4 font-sans-regular text-primary"
-            value={message}
-            onChangeText={setMessage}
-            placeholder="I'm interested in this property..."
-            placeholderTextColor="#b7b7b8"
-            multiline
-            textAlignVertical="top"
-          />
-        </View>
-
-        <Pressable
-          className="items-center rounded-full bg-accent py-4"
-          onPress={() => onSubmit({ fullName: fullName.trim(), phone: phone.trim(), message: message.trim() })}
-          disabled={submitting}
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <ScrollView
+          className="rounded-t-3xl bg-white"
+          keyboardShouldPersistTaps="handled"
         >
-          {submitting ? (
-            <ActivityIndicator color="#ffffff" />
-          ) : (
-            <Text className="font-sans-bold text-white">Submit</Text>
-          )}
-        </Pressable>
-      </View>
+          <View className="gap-5 px-5 pb-8 pt-6">
+          <View className="flex-row items-center justify-between">
+            <Text className="text-xl font-sans-bold text-primary">Request Enquiry</Text>
+            <Pressable onPress={onClose}>
+              <Text className="font-sans-medium text-primary/60">Close</Text>
+            </Pressable>
+          </View>
+
+          <View className="gap-2">
+            <Text className="font-sans-medium text-primary/70">Name</Text>
+            <TextInput
+              className="rounded-2xl bg-[#F2F2F2] px-4 py-4 font-sans-regular text-primary"
+              value={fullName}
+              onChangeText={setFullName}
+              placeholder="Your name"
+              placeholderTextColor="#b7b7b8"
+              returnKeyType="done"
+              onSubmitEditing={() => Keyboard.dismiss()}
+            />
+          </View>
+
+          <View className="gap-2">
+            <Text className="font-sans-medium text-primary/70">Phone</Text>
+            <TextInput
+              className="rounded-2xl bg-[#F2F2F2] px-4 py-4 font-sans-regular text-primary"
+              value={phone}
+              onChangeText={setPhone}
+              placeholder="+91 98765 43210"
+              placeholderTextColor="#b7b7b8"
+              keyboardType="phone-pad"
+              returnKeyType="done"
+              onSubmitEditing={() => Keyboard.dismiss()}
+            />
+          </View>
+
+          <View className="gap-2">
+            <Text className="font-sans-medium text-primary/70">Message (optional)</Text>
+            <TextInput
+              className="min-h-24 rounded-2xl bg-[#F2F2F2] px-4 py-4 font-sans-regular text-primary"
+              value={message}
+              onChangeText={setMessage}
+              placeholder="I'm interested in this property..."
+              placeholderTextColor="#b7b7b8"
+              multiline
+              textAlignVertical="top"
+            />
+          </View>
+
+          <Pressable
+            className="items-center rounded-full bg-accent py-4"
+            onPress={() => onSubmit({ fullName: fullName.trim(), phone: phone.trim(), message: message.trim() })}
+            disabled={submitting}
+          >
+            {submitting ? (
+              <ActivityIndicator color="#ffffff" />
+            ) : (
+              <Text className="font-sans-bold text-white">Submit</Text>
+            )}
+          </Pressable>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
