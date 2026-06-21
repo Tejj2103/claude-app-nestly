@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { supabase } from "@/lib/supabase";
-import type { FurnishedStatus, Property, PropertyCategory } from "./types";
+import type { FurnishedStatus, Property, PropertyCategory, PropertyImage, PropertyStatus } from "./types";
 
 export type BhkFilter = "Studio" | "1" | "2" | "3" | "Any";
 export type BathroomsFilter = "1" | "2" | "3+" | "Any";
@@ -38,6 +38,9 @@ interface PropertyRow {
   bathrooms: number | null;
   furnished: FurnishedStatus | null;
   parking: string | null;
+  status: PropertyStatus;
+  available_from: string | null;
+  description: string | null;
 }
 
 export function mapPropertyRow(row: PropertyRow): Property {
@@ -54,6 +57,9 @@ export function mapPropertyRow(row: PropertyRow): Property {
     bathrooms: row.bathrooms ?? undefined,
     furnished: row.furnished ?? undefined,
     parking: row.parking ?? undefined,
+    status: row.status,
+    availableFrom: row.available_from ?? undefined,
+    description: row.description ?? undefined,
   };
 }
 
@@ -184,4 +190,45 @@ export function useHome(id: string | undefined): UseHomeResult {
   }, [id]);
 
   return { data, isLoading, error };
+}
+
+interface PropertyImageRow {
+  id: string;
+  image_url: string;
+  sort_order: number;
+}
+
+export function usePropertyImages(propertyId: string | undefined): PropertyImage[] {
+  const [images, setImages] = useState<PropertyImage[]>([]);
+
+  useEffect(() => {
+    if (!propertyId) {
+      setImages([]);
+      return;
+    }
+
+    let cancelled = false;
+
+    supabase
+      .from("property_images")
+      .select("*")
+      .eq("property_id", propertyId)
+      .order("sort_order", { ascending: true })
+      .then(({ data: rows }) => {
+        if (cancelled) return;
+        setImages(
+          ((rows ?? []) as PropertyImageRow[]).map((row) => ({
+            id: row.id,
+            imageUrl: row.image_url,
+            sortOrder: row.sort_order,
+          }))
+        );
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [propertyId]);
+
+  return images;
 }

@@ -1,5 +1,6 @@
 export type PropertyCategory = "Apartment" | "Houses" | "Retail" | "Lease";
 export type FurnishedStatus = "Furnished" | "Semi-Furnished" | "Unfurnished";
+export type PropertyStatus = "available" | "sold" | "rented" | "hold";
 
 export interface Property {
   id: string;
@@ -14,4 +15,13 @@ export interface Property {
   bathrooms?: number;
   furnished?: FurnishedStatus;
   parking?: string;
+  status: PropertyStatus;
+  availableFrom?: string;
+  description?: string;
+}
+
+export interface PropertyImage {
+  id: string;
+  imageUrl: string;
+  sortOrder: number;
 }
